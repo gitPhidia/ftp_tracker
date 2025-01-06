@@ -1,0 +1,19 @@
+{
+  "name": "ftp_track_automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.16",
+    "pg": "^8.13.1",
+    "winston": "^3.15.0"
+  }
+}
