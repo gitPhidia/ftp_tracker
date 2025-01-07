@@ -3,9 +3,9 @@ const { Pool } = require("pg");
 // Configurer la connexion à PostgreSQL
 const pool = new Pool({
   user: "postgres",
-  password: "",
+  password: "MGbi@262**",
   host: "localhost",
-  port: 5432,
+  port: 5433,
   database: "ftp_tracker",
 });
 

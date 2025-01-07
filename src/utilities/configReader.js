@@ -17,7 +17,7 @@ if (result.error) {
 // Obtenir et préparer la configuration
 const CONFIG = {
   HOST: process.env.HOST,
-  USER: process.env.USER,
+  USER: "web",
   PASSWORD: crypt.decryptPassword(process.env.PASSWORD),
   PORT: parseInt(process.env.PORT, 10),
   SECURE: process.env.SECURE === "true",

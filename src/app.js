@@ -1,7 +1,8 @@
 const CONFIG = require("./utilities/configReader"); // Charger la configuration
 const logger = require("./utilities/logger"); // Charger le logger
 const { syncFtpWithDatabase, getMissingFiles } = require("./ftp/ftpTracker");
-const { sendMissingFilesReport, sendTestMail } = require("./email/emailSender");
+const { sendMissingFilesReport} = require("./email/emailSender");
+const cron = require('node-cron');
 
 
 
@@ -46,7 +47,7 @@ async function handleMissingFilesCheck() {
  * Fonction principale.
  */
 async function handleMissingFileRepport() {
-  const currentDate = new Date('2025-01-05') // Date au format YYYY-MM-DD
+  const currentDate = new Date('2025-01-06') // Date au format YYYY-MM-DD
 
   try {
     console.log(`Lancement du rapport des fichiers manquants pour la date : ${currentDate}`);
@@ -64,7 +65,7 @@ async function handleMissingFileRepport() {
 async function main() {
   try {
     // Appeler la logique de synchronisation
-    await handleSynchronization();
+   // await handleSynchronization();
 
     // Vérifier les fichiers attendus manquants
     // await handleMissingFilesCheck();
@@ -78,5 +79,16 @@ async function main() {
   }
 }
 
+
+// Planification avec node-cron pour exécuter la fonction toutes les 10 minutes
+cron.schedule('*/10 * * * *', async () => {
+  try {
+    console.log("Starting synchronization process...");
+    await handleSynchronization();
+  } catch (error) {
+    console.error("Error during synchronization:", error.message);
+  }
+});
+
 // Exécuter l'application principale
-main();
+//main();

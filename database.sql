@@ -24,7 +24,8 @@ CREATE TABLE files (
     platform_name TEXT,
     match_any_regex BOOLEAN NOT NULL,
     inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
+    deleted_at TIMESTAMP DEFAULT NULL 
 );
 
 
@@ -82,11 +83,25 @@ INSERT INTO expected_basenames (platform_id, basename)
 VALUES
 ((SELECT id FROM platforms WHERE name = 'odoo'), 'qlm_database');
 
+
+
+
+----new data 06/01
+INSERT INTO expected_basenames (platform_id, basename)
+VALUES
+((SELECT id FROM platforms WHERE name = 'ebp'), 'MILLOT_BIS_f9e92713-702a-4762-ba2d-83ad4b7f2769'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'MILLOT_SA_IMMO_6966ac2d-e1b2-4944-a92f-1d1a8399c23f'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'MILLOT_SA_Juin2020_f9e92713-702a-4762-ba2d-83ad4b7f2769'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'MADAPLAST IMMO 2019_6966ac2d-e1b2-4944-a92f-1d1a8399c23f'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'SOCIETE MADAPLAST COMPTA EBP V11_9c9c51d5-d6fd-44fc-9724-a63a935a6fc7');
+
+
+--data 07/01
 -- Pour la plateforme `site_web`
 INSERT INTO expected_basenames (platform_id, basename)
 VALUES
-((SELECT id FROM platforms WHERE name = 'site_web'), 'FRACOMEX_DATABASE');
-
+((SELECT id FROM platforms WHERE name = 'site_web'), 'monitoring_database'),
+((SELECT id FROM platforms WHERE name = 'site_web'), 'gpnr_database');
 
 
 WITH daily_files AS (
@@ -99,3 +114,8 @@ SELECT eb.basename AS missing_base_name
 FROM expected_basenames eb
 LEFT JOIN daily_files df ON eb.basename = df.base_name
 WHERE df.base_name IS NULL;
+
+
+INSERT INTO expected_basenames (platform_id, basename)
+VALUES
+((SELECT id FROM platforms WHERE name = 'site_web'), 'focicom_database'),
