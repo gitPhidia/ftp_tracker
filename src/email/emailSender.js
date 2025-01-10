@@ -1,6 +1,7 @@
 const { createTransport } = require("nodemailer");
 const { MAIL_CONFIG } = require("../utilities/configReader");
 const { getMissingFiles } = require("../ftp/ftpTracker");
+const { formatDateFr } = require("../utilities/utils")
 
 /**
  * Créer un transporteur Nodemailer pour envoyer un e-mail via le serveur SMTP configuré.
@@ -90,11 +91,11 @@ const sendMissingFilesReport = async (forDate) => {
     // Paramètres pour l'e-mail
     const from = MAIL_CONFIG.from;  // Adresse de l'expéditeur
     const to = "loicRavelo05@gmail.com";    // Adresse du destinataire principal
-    const cc = "loicRavelo@outlook.com";  // Optionnel, pour les copies
-    const subject = `Rapport des fichiers manquants - ${forDate}`;
+    const cc = "loicRavelo@outlook.com , tahina@phidia.onmicrosoft.com ";  // Optionnel, pour les copies
+    const subject = `Rapport des fichiers manquants - ${formatDateFr(forDate)}`;
     const html = `
       <p>Bonjour,</p>
-      <p>Voici la liste des fichiers manquants pour la date : <strong>${forDate}</strong>.</p>
+      <p>Voici la liste des fichiers manquants pour la date : <strong>${formatDateFr(forDate)}</strong>.</p>
       ${tableHtml}
       <p>Cordialement,</p>
       <p>L'équipe de surveillance FTP</p>

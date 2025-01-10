@@ -104,6 +104,21 @@ VALUES
 ((SELECT id FROM platforms WHERE name = 'site_web'), 'gpnr_database');
 
 
+
+--data 09
+
+----new data 06/01
+INSERT INTO expected_basenames (platform_id, basename)
+VALUES
+((SELECT id FROM platforms WHERE name = 'ebp'), 'PHIDIA2019_9c9c51d5-d6fd-44fc-9724-a63a935a6fc7'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'PHIDIA_9c9c51d5-d6fd-44fc-9724-a63a935a6fc7'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'PHIDIA_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'MGBI_PAYE_3_f9e92713-702a-4762-ba2d-83ad4b7f2769'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'MGBI_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'EBP_MGBI_2020_9c9c51d5-d6fd-44fc-9724-a63a935a6fc7');
+
+
+
 WITH daily_files AS (
     SELECT DISTINCT base_name
     FROM files

@@ -5,7 +5,18 @@ const { sendMissingFilesReport} = require("./email/emailSender");
 const cron = require('node-cron');
 
 
+/**
+ * Fonction pour obtenir la date d'hier (currentDate - 1).
+ */
+function getYesterdayDate() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1); // Soustraire un jour
+  return yesterday.toISOString().split("T")[0]; // Formater la date en YYYY-MM-DD
+}
 
+
+
+//console.log(getYesterdayDate());
 
 /**
  * Fonction pour gérer la synchronisation des fichiers FTP avec la base de données.
@@ -46,19 +57,17 @@ async function handleMissingFilesCheck() {
 /**
  * Fonction principale.
  */
-async function handleMissingFileRepport() {
-  const currentDate = new Date('2025-01-06') // Date au format YYYY-MM-DD
+async function handleMissingFileReport() {
+  const yesterdayDate = getYesterdayDate(); // Obtenir la date d'hier
 
   try {
-    console.log(`Lancement du rapport des fichiers manquants pour la date : ${currentDate}`);
-    //await sendMissingFilesReport(currentDate);
-    await sendMissingFilesReport(currentDate); 
+    console.log(`Lancement du rapport des fichiers manquants pour la date : ${yesterdayDate}`);
+    await sendMissingFilesReport(yesterdayDate); 
     console.log("Rapport des fichiers manquants envoyé avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'envoi du rapport des fichiers manquants :", error.message);
   }
 }
-
 /**
  * Fonction principale pour orchestrer l'application.
  */
@@ -70,7 +79,7 @@ async function main() {
     // Vérifier les fichiers attendus manquants
     // await handleMissingFilesCheck();
 
-    await handleMissingFileRepport(); // Appeler la fonction mail_test
+    await handleMissingFileReport(); // Appeler la fonction mail_test
 
     logger.info("All processes completed successfully.");
   } catch (error) {
@@ -89,6 +98,16 @@ cron.schedule('*/10 * * * *', async () => {
     console.error("Error during synchronization:", error.message);
   }
 });
+
+
+cron.schedule('0 9 * * *', async () => {
+   try {
+    console.log("Start sending repport  process...");
+    await handleMissingFileReport();
+  } catch (error) {
+    console.error("Error during sending report:", error.message);
+  }
+})
 
 // Exécuter l'application principale
 //main();

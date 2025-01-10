@@ -58,10 +58,31 @@ function extractBaseName(str, regexPattern) {
 }
 
 
+
+
+const formatDateFr = (dateInput) => {
+  // Si l'entrée est une chaîne de caractères, la convertir en objet Date
+  const dateObj = new Date(dateInput);
+
+  // Vérifier si la date est valide
+  if (isNaN(dateObj.getTime())) {
+    throw new Error("La date fournie n'est pas valide.");
+  }
+
+  // Formatage de la date en français
+  return dateObj.toLocaleDateString("fr-FR", {
+    weekday: "long",  // Jour de la semaine en long (ex: lundi, mardi)
+    year: "numeric",  // Année en format numérique (ex: 2025)
+    month: "long",    // Mois en format long (ex: janvier, février)
+    day: "numeric",   // Jour du mois en format numérique (ex: 8)
+  });
+};
+
 module.exports = {
   bytesToMegabytes,
   bytesToMo,
   matchesRegex,
   extractBaseName,
   prepareRegex,
+  formatDateFr
 };
