@@ -189,6 +189,21 @@ async function getMissingExpectedFiles(forDate) {
   return result;
 }
 
+async function getReceviedExpectedFiles(fordate) {
+  const query = `
+      SELECT 
+        base_name, 
+        name,
+        size ,
+        platform_name ,
+        inserted_at 
+      FROM files
+      WHERE DATE(inserted_at) = $1
+        AND deleted_at IS NULL;
+    `;
+  const result = await db.executeQuery(query, [fordate]);
+  return result;
+}
 
 
 module.exports = {
@@ -201,4 +216,5 @@ module.exports = {
   markFileAsDeleted,
   getAllFilesFromDatabase,
   getMissingExpectedFiles,
+  getReceviedExpectedFiles,
 };
