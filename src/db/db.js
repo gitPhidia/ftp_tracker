@@ -1,12 +1,15 @@
 const { Pool } = require("pg");
+const CONFIG = require("../utilities/configReader")
+
+const  DB_CONFIG = CONFIG.DB_CONFIG
 
 // Configurer la connexion à PostgreSQL
 const pool = new Pool({
-  user: "postgres",
-  password: "MGbi@262**",
-  host: "localhost",
-  port: 5433,
-  database: "ftp_tracker",
+  user: DB_CONFIG.user,
+  password: DB_CONFIG.password,
+  host: DB_CONFIG.host,
+  port: DB_CONFIG.port,
+  database: DB_CONFIG.database,
 });
 
 /**
