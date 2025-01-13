@@ -199,7 +199,8 @@ async function getReceviedExpectedFiles(fordate) {
         inserted_at 
       FROM files
       WHERE DATE(inserted_at) = $1
-        AND deleted_at IS NULL;
+        AND deleted_at IS NULL AND base_name IS NOT NULL
+      ORDER BY base_name ASC ;
     `;
   const result = await db.executeQuery(query, [fordate]);
   return result;

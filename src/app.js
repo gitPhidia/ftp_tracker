@@ -62,10 +62,10 @@ async function handleMissingFilesCheck() {
  */
 async function handleMissingFileReport() {
   const yesterdayDate = getYesterdayDate(); // Obtenir la date d'hier
-  const date = '2025-01-07';
+ // const date = '2025-01-07';
   try {
     console.log(`Lancement du rapport des fichiers manquants pour la date : ${yesterdayDate}`);
-    await sendCombinedFilesReport(date); 
+    await sendCombinedFilesReport(yesterdayDate); 
     console.log("Rapport des fichiers manquants envoyé avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'envoi du rapport des fichiers manquants :", error.message);

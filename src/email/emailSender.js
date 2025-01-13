@@ -3,6 +3,7 @@ const CONFIG = require("../utilities/configReader");
 const { getMissingFiles, getReceviedFiles } = require("../ftp/ftpTracker");
 const { formatDateFr } = require("../utilities/utils");
 
+
 const MAIL_CONFIG = CONFIG.MAIL_CONFIG;
 
 console.log(MAIL_CONFIG);
@@ -93,7 +94,9 @@ const generateReceivedFilesTable = (receivedFiles) => {
         <tr>
           <td>${file.base_name}</td>
           <td>${file.name}</td>
-          <td>${new Date(file.insertedAt).toLocaleString("fr-FR")}</td>
+          <td>${formatDateFr(file.inserted_at)}</td>
+          <td>${file.platform_name}</td>
+          <td>${file.size} Mo</td>
         </tr>
       `
     )
@@ -106,6 +109,8 @@ const generateReceivedFilesTable = (receivedFiles) => {
           <th>Base Name</th>
           <th>Nom du Fichier</th>
           <th>Date d'Insertion</th>
+          <th>Plateform</th>
+          <th>taille</th>
         </tr>
       </thead>
       <tbody>
