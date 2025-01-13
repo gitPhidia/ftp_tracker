@@ -1,7 +1,10 @@
 const CONFIG = require("./utilities/configReader"); // Charger la configuration
 const logger = require("./utilities/logger"); // Charger le logger
 const { syncFtpWithDatabase, getMissingFiles } = require("./ftp/ftpTracker");
-const { sendMissingFilesReport} = require("./email/emailSender");
+const {
+  sendMissingFilesReport,
+  sendCombinedFilesReport,
+} = require("./email/emailSender");
 const cron = require('node-cron');
 
 
@@ -59,10 +62,10 @@ async function handleMissingFilesCheck() {
  */
 async function handleMissingFileReport() {
   const yesterdayDate = getYesterdayDate(); // Obtenir la date d'hier
-
+  const date = '2025-01-07';
   try {
     console.log(`Lancement du rapport des fichiers manquants pour la date : ${yesterdayDate}`);
-    await sendMissingFilesReport(yesterdayDate); 
+    await sendCombinedFilesReport(date); 
     console.log("Rapport des fichiers manquants envoyé avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'envoi du rapport des fichiers manquants :", error.message);
@@ -110,4 +113,4 @@ cron.schedule('0 9 * * *', async () => {
 })
 
 // Exécuter l'application principale
-//main();
+handleMissingFileReport();

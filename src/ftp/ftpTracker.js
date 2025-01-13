@@ -8,6 +8,7 @@ const {
   getAllFilesFromDatabase,
   markFileAsDeleted,
   getMissingExpectedFiles,
+  getReceviedExpectedFiles,
 } = require("../services/dataService");
 
 
@@ -106,8 +107,25 @@ async function getMissingFiles(forDate) {
 }
 
 
+/**
+ * Obtient une liste des fichiers attendus mais manquants pour une date donnée.
+ * @param {string} forDate - La date au format "YYYY-MM-DD".
+ * @returns {Promise<Array<string>>} - Liste des noms des fichiers manquants.
+ */
+async function getReceviedFiles(forDate) {
+  try {
+    const rawResult = await getReceviedExpectedFiles(forDate);
+    return rawResult;// Extrait uniquement les noms
+  } catch (error) {
+    console.error("Error in service fetching received files:", error.message);
+    throw error;
+  }
+}
+
+
 module.exports = {
   displayFilesWithDetails,
   syncFtpWithDatabase,
   getMissingFiles,
+  getReceviedFiles
 };
