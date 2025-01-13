@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
   const { createTransport } = require("nodemailer");
 const { MAIL_CONFIG } = require("../utilities/configReader");
 const { getMissingFiles } = require("../ftp/ftpTracker");
