@@ -31,6 +31,7 @@ const CONFIG = {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
     from: process.env.MAIL_FROM,
+    ccs: process.env.MAIL_CCS
   },
 
   // Configuration pour la base de données

@@ -26,13 +26,14 @@ const transporter = createTransport({
  * Fonction générique pour envoyer un e-mail.
  * @param {string} from - Adresse e-mail de l'expéditeur.
  * @param {string} to - Adresse e-mail du destinataire principal.
- * @param {string} cc - Liste des destinataires en copie (séparée par des virgules).
+ * @param {string[]} cc - tableau des cc.
  * @param {string} subject - Sujet de l'e-mail.
  * @param {string} html - Contenu HTML de l'e-mail.
  */
 const sendMail = async (from, to, cc, subject, html) => {
   try {
     // Options de l'e-mail
+    console.log(cc)
     const mailOptions = {
       from: from, // Expéditeur
       to: to, // Destinataire principal
@@ -42,6 +43,7 @@ const sendMail = async (from, to, cc, subject, html) => {
     };
 
     // Envoi de l'e-mail
+    console.log(mailOptions)
     const info = await transporter.sendMail(mailOptions);
     console.log(`E-mail envoyé : ${info.messageId}`);
   } catch (error) {
@@ -136,7 +138,7 @@ const sendMissingFilesReport = async (forDate) => {
     const from = MAIL_CONFIG.from; // Adresse de l'expéditeur
     const to = "loicRavelo05@gmail.com"; // Adresse du destinataire principal
     // const cc = "loicRavelo@outlook.com , tahina@phidia.onmicrosoft.com ";  // Optionnel, pour les copies
-    const cc = "loicRavelo@outlook.com ";
+    const cc = MAIL_CONFIG.ccs; // Adresses en copie sous forme de tableau
     const subject = `Rapport des fichiers manquants - ${formatDateFr(forDate)}`;
     const html = `
       <p>Bonjour,</p>
@@ -175,7 +177,7 @@ const sendCombinedFilesReport = async (forDate) => {
     // Paramètres pour l'e-mail
     const from = MAIL_CONFIG.from; // Adresse de l'expéditeur
     const to = "loicRavelo05@gmail.com"; // Adresse du destinataire principal
-    const cc = "loicRavelo@outlook.com"; // Optionnel, pour les copies
+    const cc = MAIL_CONFIG.ccs; // Optionnel, pour les copies
     const subject = `Rapport combiné - ${formatDateFr(forDate)}`;
     const html = `
       <p>Bonjour,</p>
