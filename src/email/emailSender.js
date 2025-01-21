@@ -1,7 +1,11 @@
 const { createTransport } = require("nodemailer");
 const CONFIG = require("../utilities/configReader");
 const { getMissingFiles, getReceviedFiles } = require("../ftp/ftpTracker");
-const { formatDateFr } = require("../utilities/utils");
+const {
+  formatDateFr,
+  formatSizeString,
+  formatSizeToTwoDecimals,
+} = require("../utilities/utils");
 
 
 const MAIL_CONFIG = CONFIG.MAIL_CONFIG;
@@ -67,10 +71,12 @@ const generateMissingFilesTable = (missingFiles) => {
     .join("");
 
   return `
-    <table border="1" style="border-collapse: collapse; width: 100%;">
+    <table border="1" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
       <thead>
         <tr>
-          <th>Base Name Manquant</th>
+          <th style="background-color: red; color: white; padding: 10px; text-align: left;">
+            Base Name Manquant
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -79,6 +85,7 @@ const generateMissingFilesTable = (missingFiles) => {
     </table>
   `;
 };
+
 
 /**
  * Générer un tableau HTML pour afficher les fichiers reçus.
@@ -98,21 +105,23 @@ const generateReceivedFilesTable = (receivedFiles) => {
           <td>${file.name}</td>
           <td>${formatDateFr(file.inserted_at)}</td>
           <td>${file.platform_name}</td>
-          <td>${file.size} Mo</td>
+          <td style="text-align: right;">${formatSizeToTwoDecimals(
+            file.size
+          )} Mo</td>
         </tr>
       `
     )
     .join("");
 
   return `
-    <table border="1" style="border-collapse: collapse; width: 100%;">
+    <table border="1" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
       <thead>
         <tr>
           <th>Base Name</th>
           <th>Nom du Fichier</th>
           <th>Date d'Insertion</th>
           <th>Plateform</th>
-          <th>taille</th>
+          <th style="width: 8%; text-align: right;">Taille</th>
         </tr>
       </thead>
       <tbody>
@@ -121,6 +130,7 @@ const generateReceivedFilesTable = (receivedFiles) => {
     </table>
   `;
 };
+
 
 /**
  * Envoyer un rapport par e-mail pour les fichiers manquants.
@@ -169,6 +179,8 @@ const sendCombinedFilesReport = async (forDate) => {
     // Récupérer les fichiers manquants et reçus
     const missingFiles = await getMissingFiles(forDate);
     const receivedFiles = await getReceviedFiles(forDate);
+
+    console.log(receivedFiles);
 
     // Générer les tableaux HTML pour les deux types de fichiers
     const tableHtmlMissing = generateMissingFilesTable(missingFiles);

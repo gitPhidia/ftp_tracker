@@ -78,11 +78,60 @@ const formatDateFr = (dateInput) => {
   });
 };
 
+
+
+/**
+ * Formater une taille avec une séparation pour les milliers.
+ * @param {string} sizeString - Chaîne de taille au format "XXXX.XX Mo".
+ * @returns {string} - Taille formatée avec des séparateurs.
+ */
+const formatSizeString = (sizeString) => {
+  if (!sizeString) return sizeString;
+
+  // Extraire la valeur numérique et l'unité
+  const match = sizeString.match(/^([\d.]+)\s*(\w+)$/);
+  if (!match) return sizeString; // Si le format n'est pas valide, retourner tel quel
+
+  const [_, numericPart, unit] = match;
+
+  // Convertir la partie numérique en un format localisé avec des séparateurs
+  const formattedNumber = parseFloat(numericPart).toLocaleString("fr-FR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  // Reconstituer la chaîne formatée
+  return `${formattedNumber} ${unit}`;
+};
+
+
+/**
+ * Formater une taille avec exactement deux chiffres après la virgule.
+ * @param {string} sizeString - Chaîne de taille au format "XXXX.XX Mo".
+ * @returns {string} - Taille formatée avec deux chiffres après la virgule.
+ */
+const formatSizeToTwoDecimals = (numberInput) => {
+  if (numberInput === null || numberInput === undefined) return "";
+
+  // Convertir en nombre flottant
+  const number = parseFloat(numberInput);
+  if (isNaN(number)) return numberInput.toString(); // Retourner tel quel si ce n'est pas un nombre valide
+
+  // Formater avec deux chiffres après la virgule et des espaces pour les milliers
+  return number.toLocaleString("fr-FR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+
 module.exports = {
   bytesToMegabytes,
   bytesToMo,
   matchesRegex,
   extractBaseName,
   prepareRegex,
-  formatDateFr
+  formatDateFr,
+  formatSizeString,
+  formatSizeToTwoDecimals,
 };

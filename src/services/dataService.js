@@ -194,7 +194,7 @@ async function getReceviedExpectedFiles(fordate) {
       SELECT 
         base_name, 
         name,
-        size ,
+        COALESCE(size , 0) as size ,
         platform_name ,
         inserted_at 
       FROM files
@@ -203,6 +203,7 @@ async function getReceviedExpectedFiles(fordate) {
       ORDER BY base_name ASC ;
     `;
   const result = await db.executeQuery(query, [fordate]);
+  //console.log("ito => " + fordate + " => "+ result)
   return result;
 }
 
