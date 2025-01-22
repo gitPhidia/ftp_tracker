@@ -133,4 +133,23 @@ WHERE df.base_name IS NULL;
 
 INSERT INTO expected_basenames (platform_id, basename)
 VALUES
-((SELECT id FROM platforms WHERE name = 'site_web'), 'focicom_database'),
+((SELECT id FROM platforms WHERE name = 'site_web'), 'focicom_database')
+
+
+
+
+
+
+
+
+-- enabled 
+--MADAPLAST_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4
+--LAP_MADAPLAST_ANALDEC2019_ad0c5b20-ed4a-4364-8256-25dbf849d6c7
+--
+
+
+
+
+ALTER TABLE expected_basenames ADD COLUMN "enabled" BOOLEAN DEFAULT true;
+
+UPDATE expected_basenames SET enabled = false where id=2 or id=7;
