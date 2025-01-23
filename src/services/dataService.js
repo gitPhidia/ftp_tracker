@@ -7,8 +7,8 @@ const db = require("../db/db");
 async function fetchFileConfig() {
   const query = `
     SELECT platforms.name AS platform, platforms.platform_regex, expected_basenames.basename
-    FROM expected_basenames where enabled = true
-    JOIN platforms ON platforms.id = expected_basenames.platform_id;
+    FROM expected_basenames
+    JOIN platforms ON platforms.id = expected_basenames.platform_id   where expected_basenames.enabled = true;
   `;
 
   const rows = await db.executeQuery(query);
