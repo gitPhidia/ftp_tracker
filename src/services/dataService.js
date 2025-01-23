@@ -182,7 +182,7 @@ async function getMissingExpectedFiles(forDate) {
     SELECT eb.basename AS missing_base_name
     FROM expected_basenames eb
     LEFT JOIN daily_files df ON eb.basename = df.base_name
-    WHERE df.base_name IS NULL;
+    WHERE df.base_name IS NULL and eb.enabled = true;
   `;
 
   const result = await db.executeQuery(query, [forDate]);
