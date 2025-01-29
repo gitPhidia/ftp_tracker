@@ -176,8 +176,9 @@ async function getMissingExpectedFiles(forDate) {
     WITH daily_files AS (
         SELECT DISTINCT base_name
         FROM files
-        WHERE DATE(inserted_at) = $1
+        WHERE  DATE(inserted_at) = $1 
           AND deleted_at IS NULL
+          AND size > 0
     )
     SELECT eb.basename AS missing_base_name
     FROM expected_basenames eb
@@ -199,8 +200,8 @@ async function getReceviedExpectedFiles(fordate) {
         inserted_at 
       FROM files
       WHERE DATE(inserted_at) = $1
-        AND deleted_at IS NULL AND base_name IS NOT NULL
-      ORDER BY base_name ASC ;
+        AND deleted_at IS NULL AND base_name IS NOT NULL AND size > 0
+      ORDER BY base_name ASC  ;
     `;
   const result = await db.executeQuery(query, [fordate]);
   //console.log("ito => " + fordate + " => "+ result)
