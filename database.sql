@@ -153,3 +153,11 @@ VALUES
 ALTER TABLE expected_basenames ADD COLUMN "enabled" BOOLEAN DEFAULT true;
 
 UPDATE expected_basenames SET enabled = false where id=2 or id=7;
+
+
+
+----new data 26/02/2025
+INSERT INTO expected_basenames (platform_id, basename)
+VALUES
+((SELECT id FROM platforms WHERE name = 'ebp'), 'NAJMI Pharma_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4'),
+((SELECT id FROM platforms WHERE name = 'ebp'), 'NAJMI_9c9c51d5-d6fd-44fc-9724-a63a935a6fc7');
