@@ -161,3 +161,29 @@ INSERT INTO expected_basenames (platform_id, basename)
 VALUES
 ((SELECT id FROM platforms WHERE name = 'ebp'), 'NAJMI Pharma_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4'),
 ((SELECT id FROM platforms WHERE name = 'ebp'), 'NAJMI_9c9c51d5-d6fd-44fc-9724-a63a935a6fc7');
+
+
+
+--customer maj
+CREATE TABLE customers (
+    ID SERIAL PRIMARY KEY ,
+    customer_name VARCHAR(50) NOT NULL,
+    inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+CREATE TABLE customer_contacts(
+    ID serial PRIMARY KEY ,
+    mail VARCHAR(50) NOT NULL ,
+    customer_id INT NOT NULL ,
+    FOREIGN KEY (customer_id) REFERENCES customers(id) 
+);
+
+
+--customer 
+INSERT INTO customers (customer_name) VALUES ('MGBI'),('MILLOT'),('NAJMI') ,('MADAPLAST') ,('QLM') , ('ISSOUFALI') , ('PLS');
+
+--customer contacts
+INSERT INTO customer_contacts(mail , customer_id )
+VALUES 
+('loic05@gmail.com' , 1 )

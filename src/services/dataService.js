@@ -209,6 +209,20 @@ async function getReceviedExpectedFiles(fordate) {
 }
 
 
+
+
+
+async function getCustomerContacts(customer_id) {
+  const query = `
+    SELECT * FROM customer_contacts where customer_id=$1
+  `
+  const result = await db.executeQuery(query, [customer_id]);
+  console.log(result)
+  return result;
+}
+
+
+
 module.exports = {
   fetchFileConfig,
   insertProcessedFile,

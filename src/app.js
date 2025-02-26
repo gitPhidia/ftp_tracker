@@ -5,6 +5,9 @@ const {
   sendMissingFilesReport,
   sendCombinedFilesReport,
 } = require("./email/emailSender");
+
+const { sendDailyCombinedRepport  } = require("./email/emailService")
+
 const cron = require('node-cron');
 
 
@@ -65,7 +68,7 @@ async function handleMissingFileReport() {
  // const date = '2025-01-07';
   try {
     console.log(`Lancement du rapport des fichiers manquants pour la date : ${yesterdayDate}`);
-    await sendCombinedFilesReport(yesterdayDate); 
+    await sendDailyCombinedRepport(yesterdayDate); 
     console.log("Rapport des fichiers manquants envoyé avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'envoi du rapport des fichiers manquants :", error.message);
@@ -113,4 +116,4 @@ cron.schedule('0 9 * * *', async () => {
 })
 
 // Exécuter l'application principale
-//handleMissingFileReport();
+handleMissingFileReport();
