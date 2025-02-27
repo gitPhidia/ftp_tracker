@@ -190,6 +190,29 @@ async function getMissingExpectedFiles(forDate) {
   return result;
 }
 
+
+
+// Récupère tous les fichiers manquantes
+async function getMissingExpectedFilesByCustomer(forDate , customer_id) {
+  const query = `
+    WITH daily_files AS (
+        SELECT DISTINCT base_name
+        FROM files
+        WHERE  DATE(inserted_at) = $1 
+          AND deleted_at IS NULL
+          AND size > 0
+    )
+    SELECT eb.basename AS missing_base_name
+    FROM expected_basenames eb
+    LEFT JOIN daily_files df ON eb.basename = df.base_name
+    WHERE df.base_name IS NULL and eb.enabled = true and eb.customer_id = $2;
+  `;
+
+  const result = await db.executeQuery(query, [forDate , customer_id]);
+  return result;
+}
+
+
 async function getReceviedExpectedFiles(fordate) {
   const query = `
       SELECT 
@@ -210,6 +233,26 @@ async function getReceviedExpectedFiles(fordate) {
 
 
 
+async function getReceviedExpectedFilesByCustomer(fordate , customer_id) {
+  const query = `
+      SELECT 
+        base_name, 
+        name,
+        COALESCE(size , 0) as size ,
+        platform_name ,
+        inserted_at 
+      FROM v_files
+      WHERE DATE(inserted_at) = $1
+        AND customer_id = $2
+        AND deleted_at IS NULL AND base_name IS NOT NULL AND size > 0
+      ORDER BY base_name ASC  ;
+    `;
+  const result = await db.executeQuery(query, [fordate , customer_id]);
+  //console.log("ito => " + fordate + " => "+ result)
+  return result;
+}
+
+
 
 
 async function getCustomerContacts(customer_id) {
@@ -217,11 +260,25 @@ async function getCustomerContacts(customer_id) {
     SELECT * FROM customer_contacts where customer_id=$1
   `
   const result = await db.executeQuery(query, [customer_id]);
-  console.log(result)
   return result;
 }
 
 
+async function getCustomerById(customer_id) {
+  const query = `
+    SELECT  customers.* , company.name FROM customers join company on customers.company_id = company.id WHERE customers.id = $1
+  `;
+
+   const result = await db.executeQuery(query, [customer_id]);
+   return result;
+
+  
+}
+
+
+getReceviedExpectedFilesByCustomer("2025-02-27", 4)
+  .then(console.log)
+  .catch(console.error);
 
 module.exports = {
   fetchFileConfig,

@@ -68,7 +68,7 @@ async function handleMissingFileReport() {
  // const date = '2025-01-07';
   try {
     console.log(`Lancement du rapport des fichiers manquants pour la date : ${yesterdayDate}`);
-    await sendDailyCombinedRepport(yesterdayDate); 
+    await sendDailyCombinedRepport("2025-02-25"); 
     console.log("Rapport des fichiers manquants envoyé avec succès.");
   } catch (error) {
     console.error("Erreur lors de l'envoi du rapport des fichiers manquants :", error.message);
@@ -106,6 +106,8 @@ cron.schedule('*/10 * * * *', async () => {
 });
 
 
+/*
+
 cron.schedule('0 9 * * *', async () => {
    try {
     console.log("Start sending repport  process...");
@@ -114,6 +116,8 @@ cron.schedule('0 9 * * *', async () => {
     console.error("Error during sending report:", error.message);
   }
 })
+
+*/
 
 // Exécuter l'application principale
 handleMissingFileReport();

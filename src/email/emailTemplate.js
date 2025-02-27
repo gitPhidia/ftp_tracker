@@ -1,5 +1,9 @@
 
-
+const {
+  formatDateFr,
+  formatSizeString,
+  formatSizeToTwoDecimals,
+} = require("../utilities/utils");
 
 
 
@@ -23,10 +27,10 @@ const generateMissingFilesTable = (missingFiles) => {
     .join("");
 
   return `
-    <table border="1" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+    <table border="1" class="table">
       <thead>
         <tr>
-          <th style="background-color: red; color: white; padding: 10px; text-align: left;">
+          <th style="background-color: #FF2929; color: white; padding: 10px; text-align: left;">
             Nom de la base
           </th>
         </tr>
@@ -54,9 +58,8 @@ const generateReceivedFilesTable = (receivedFiles) => {
         <tr>
           <td>${file.base_name}</td>
           <td>${file.name}</td>
-          <td>${formatDateFr(file.inserted_at)}</td>
-          <td>${file.platform_name}</td>
-          <td style="text-align: right;">${formatSizeToTwoDecimals(
+          <td class="small-column">${file.platform_name}</td>
+          <td class="numeric-right">${formatSizeToTwoDecimals(
             file.size
           )} Mo</td>
         </tr>
@@ -65,22 +68,23 @@ const generateReceivedFilesTable = (receivedFiles) => {
     .join("");
 
   return `
-    <table border="1" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
-      <thead>
-        <tr>
-          <th>Nom de la base</th>
-          <th>Nom du Fichier</th>
-          <th>Date d'Insertion</th>
-          <th>Application</th>
-          <th style="width: 8%; text-align: right;">Taille</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows}
-      </tbody>
-    </table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 35%;">Nom de la base</th> 
+            <th style="width: 35%;">Nom du Fichier</th>
+            <th class="small-column" style="width: 10%;">Application</th> 
+            <th class="numeric-right" style="width: 15%;">Taille</th> 
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
   `;
 };
+
+
 
 
 const generateCombinedReportContentHtml = (missingFilesList, receivedFilesList) => {

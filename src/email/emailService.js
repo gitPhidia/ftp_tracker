@@ -9,7 +9,7 @@ const {
 
 const { sendMail } = require("./emailSender");
 
-const { EmailReport } = require("./EmailRepport");
+const  EmailReport  = require("./EmailRepport");
 
 const { generateCombinedReportContentHtml } = require("./emailTemplate");
 
@@ -212,15 +212,15 @@ const sendDailyCombinedRepport = async (forDate) => {
         console.log("fetching data ..............")
         const missingFiles = await getMissingFiles(forDate);
         console.log("fetching data 1 ..............");
-       // const receivedFiles = await getReceviedFiles(forDate);
+        const receivedFiles = await getReceviedFiles(forDate);
        // console.log(receivedFiles);
         console.log("fetching data 2..............");
-        //  const repportHtml = generateCombinedReportContentHtml(
-        //      missingFiles,
+       const repportHtml = generateCombinedReportContentHtml(
+              missingFiles,
               receivedFiles
-        //    );
+            );
           console.log("data fetched .........")
-          //await reporting(to , subject , repportTitle , repportHtml ,signature);
+          await reporting(to , subject , repportTitle , repportHtml ,signature);
     }
     catch (error) {
          console.log(error);

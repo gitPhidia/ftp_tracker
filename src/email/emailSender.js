@@ -55,7 +55,7 @@ const sendMailEngine = async (from, to, cc, subject, html) => {
 const sendMail = async (to, subject, html) => {
   const from = MAIL_CONFIG.from;
   const cc = MAIL_CONFIG.ccs;
-   await sendMail(from, to, cc, subject, html);
+   await sendMailEngine(from, to, cc, subject, html);
 }
 
 
