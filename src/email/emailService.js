@@ -1,6 +1,9 @@
 const { createTransport } = require("nodemailer");
 const CONFIG = require("../utilities/configReader");
-const { getMissingFiles, getReceviedFiles } = require("../ftp/ftpTracker");
+const {
+  getMissingFiles,
+  getReceviedFiles,
+} = require("../ftp/ftpTracker");
 const {
   formatDateFr,
   formatSizeString,
@@ -12,6 +15,14 @@ const { sendMail } = require("./emailSender");
 const  EmailReport  = require("./EmailRepport");
 
 const { generateCombinedReportContentHtml } = require("./emailTemplate");
+
+const {
+  getReceviedExpectedFilesByCustomer,
+  getCustomerContacts,
+  getCustomerById,
+  getCustomersCompanyContacts,
+  getMissingExpectedFilesByCustomer
+} = require("../services/dataService")
 
 const MAIL_CONFIG = CONFIG.MAIL_CONFIG;
 
@@ -234,10 +245,54 @@ const sendDailyCombinedRepport = async (forDate) => {
     
 }
 
+
+const dailyCustomersCombinedRepport = async (forDate , customersId) => {
+  try {
+    const customer = await getCustomerById(customersId);
+    const customerContacts = await getCustomerContacts(customersId);
+    const to ="loicRavelo@outlook.com"
+    const missingFiles = await getMissingExpectedFilesByCustomer(
+      forDate,
+      customersId
+    );
+    const receivedFiles = await getReceviedExpectedFilesByCustomer(
+      forDate,
+      customersId
+    );
+    const subject = `Rapport combiné de sauvgarde - ${formatDateFr(forDate)}`;
+    const companyContacts = await getCustomersCompanyContacts(customersId);
+    const repportTitle = `<p>
+      Voici le rapport de sauvegarde pour le dossier ${
+        customer.customer_name
+      } pour la date  - ${formatDateFr(forDate)}
+    </p>`;
+    // Génération de la signature avec les emails
+    let contactsEmails = companyContacts
+      .map((contact) => contact.mail)
+      .join(", ");
+
+    const signature = `
+      <p>Cordialement,</p>
+      <p>Merci de ne pas répondre, pour plus d'informations merci de contacter : <strong>${contactsEmails}</strong></p>
+      <p>L'équipe de surveillance FTP</p>
+    `;
+
+     const repportHtml = generateCombinedReportContentHtml(
+       missingFiles,
+       receivedFiles
+     );
+
+      await reporting(to, subject, repportTitle, repportHtml, signature);
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
 (async () => {
   try {
     console.log("Testing getMissingFiles...");
-    const testFiles = await getMissingFiles("2024-02-26"); // Remplace par une date valide
+    const testFiles = await dailyCustomersCombinedRepport("2024-02-26" ,  4); // Remplace par une date valide
     console.log("Test result:", testFiles);
   } catch (error) {
     console.error("Error in getMissingFiles:", error);

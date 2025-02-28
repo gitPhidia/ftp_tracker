@@ -270,15 +270,23 @@ async function getCustomerById(customer_id) {
   `;
 
    const result = await db.executeQuery(query, [customer_id]);
-   return result;
+   return result[0];
 
   
 }
 
 
-getReceviedExpectedFilesByCustomer("2025-02-27", 4)
-  .then(console.log)
-  .catch(console.error);
+async function getCustomersCompanyContacts(customer_id) {
+  const query = `
+    select company_contacts.* , customers.id  from customers join company_contacts on customers.company_id = company_contacts.company_id where customers.id = $1
+  `;
+
+  const result = await db.executeQuery(query, [customer_id]);
+  return result;
+}
+
+
+
 
 module.exports = {
   fetchFileConfig,
@@ -291,4 +299,9 @@ module.exports = {
   getAllFilesFromDatabase,
   getMissingExpectedFiles,
   getReceviedExpectedFiles,
+  getReceviedExpectedFilesByCustomer,
+  getCustomerContacts,
+  getCustomerById,
+  getCustomersCompanyContacts,
+  getMissingExpectedFilesByCustomer,
 };
