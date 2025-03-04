@@ -180,6 +180,49 @@ CREATE TABLE customer_contacts(
 );
 
 
+
+CREATE  TABLE "public".company ( 
+	id                   serial  NOT NULL  ,
+	name                 varchar(100)  NOT NULL  ,
+	CONSTRAINT pk_company PRIMARY KEY ( id )
+ );
+
+
+CREATE  TABLE "public".company_contacts ( 
+	id                   integer DEFAULT nextval('copmany_contacts_id_seq'::regclass) NOT NULL  ,
+	mail                 varchar(50)  NOT NULL  ,
+	company_id           integer  NOT NULL  ,
+	CONSTRAINT pk_copmany_contacts PRIMARY KEY ( id )
+ );
+
+
+ALTER TABLE expected_basenames ADD COLUMN "customer_id" INTEGER;
+
+
+ALTER TABLE "public".company_contacts ADD CONSTRAINT fk_copmany_contacts_company FOREIGN KEY ( company_id ) REFERENCES "public".company( id );
+
+
+ALTER TABLE "public".expected_basenames ADD CONSTRAINT fk_expected_basenames FOREIGN KEY ( customer_id ) REFERENCES "public".customers( id );
+
+ALTER TABLE "public".files ADD CONSTRAINT fk_files_platforms FOREIGN KEY ( platform_id ) REFERENCES "public".platforms( id );
+
+
+CREATE OR REPLACE VIEW v_active_file_with_basename AS SELECT v_active_file_with_basename,
+    v_file_with_basename.name,
+    v_file_with_basename.size,
+    v_file_with_basename.modified_at,
+    v_file_with_basename.extension,
+    v_file_with_basename.base_name,
+    v_file_with_basename.platform_id,
+    v_file_with_basename.platform_name,
+    v_file_with_basename.match_any_regex,
+    v_file_with_basename.inserted_at,
+    v_file_with_basename.updated_at,
+    v_file_with_basename.deleted_at
+   FROM v_file_with_basename
+  WHERE (v_file_with_basename.deleted_at IS NULL)
+
+
 --customer 
 INSERT INTO customers (customer_name) VALUES ('MGBI'),('MILLOT'),('NAJMI') ,('MADAPLAST') ,('QLM') , ('ISSOUFALI') , ('PLS');
 
@@ -187,3 +230,28 @@ INSERT INTO customers (customer_name) VALUES ('MGBI'),('MILLOT'),('NAJMI') ,('MA
 INSERT INTO customer_contacts(mail , customer_id )
 VALUES 
 ('loic05@gmail.com' , 1 )
+
+
+
+
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 2, 'MILLOT', '2025-02-26 09:36:52 AM', 1, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 3, 'NAJMI', '2025-02-26 09:36:52 AM', 1, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 5, 'QLM', '2025-02-26 09:36:52 AM', 1, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 6, 'ISSOUFALI', '2025-02-26 09:36:52 AM', 1, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 7, 'PLS', '2025-02-26 09:36:52 AM', 2, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 8, 'CDC', '2025-02-27 12:40:58 PM', 2, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 9, 'FOCICOM', '2025-02-27 12:41:14 PM', 2, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 10, 'FRACOMEX', '2025-02-27 02:06:42 PM', 2, false);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 1, 'MGBI', '2025-02-26 09:36:52 AM', 1, true);
+INSERT INTO "public".customers( id, customer_name, inserted_at, company_id, "notify" ) VALUES ( 4, 'MADAPLAST', '2025-02-26 09:36:52 AM', 1, true);
+
+
+INSERT INTO "public".company( id, name ) VALUES ( 1, 'MGBI');
+INSERT INTO "public".company( id, name ) VALUES ( 2, 'ALITA');
+INSERT INTO "public".company_contacts( id, mail, company_id ) VALUES ( 1, 'loic@mgbi.mg', 1);
+INSERT INTO "public".company_contacts( id, mail, company_id ) VALUES ( 2, 'tahina@mgbi.mg', 1);
+INSERT INTO "public".company_contacts( id, mail, company_id ) VALUES ( 3, 'loic@alita.re', 2);
+INSERT INTO "public".company_contacts( id, mail, company_id ) VALUES ( 4, 'tahina@alita.re', 2);
+INSERT INTO "public".customer_contacts( id, mail, customer_id ) VALUES ( 1, 'loicRavelo05@gmail.com', 1);
+INSERT INTO "public".customer_contacts( id, mail, customer_id ) VALUES ( 2, 'fanamby@mgbi.mg', 1);
+

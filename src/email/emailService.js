@@ -21,8 +21,9 @@ const {
   getCustomerContacts,
   getCustomerById,
   getCustomersCompanyContacts,
-  getMissingExpectedFilesByCustomer
-} = require("../services/dataService")
+  getMissingExpectedFilesByCustomer,
+  getCustomersToNotify,
+} = require("../services/dataService");
 
 const MAIL_CONFIG = CONFIG.MAIL_CONFIG;
 
@@ -246,11 +247,22 @@ const sendDailyCombinedRepport = async (forDate) => {
 }
 
 
-const dailyCustomersCombinedRepport = async (forDate , customersId) => {
+const dailyCustomersCombinedRepport = async (forDate, customersId) => {
   try {
     const customer = await getCustomerById(customersId);
     const customerContacts = await getCustomerContacts(customersId);
-    const to ="loicRavelo@outlook.com"
+
+    // Vérifier si la liste des contacts est vide
+    if (!customerContacts || customerContacts.length === 0) {
+      console.log(
+        `⛔ Aucun contact trouvé pour ${customer.customer_name}. Email non envoyé.`
+      );
+      return; // Stoppe uniquement pour ce client, mais continue pour les autres
+    }
+
+    // Liste des destinataires
+    const to = customerContacts.map((contact) => contact.mail).join(",");
+
     const missingFiles = await getMissingExpectedFilesByCustomer(
       forDate,
       customersId
@@ -259,13 +271,15 @@ const dailyCustomersCombinedRepport = async (forDate , customersId) => {
       forDate,
       customersId
     );
-    const subject = `Rapport combiné de sauvgarde - ${formatDateFr(forDate)}`;
+    const subject = `Rapport combiné de sauvegarde - ${formatDateFr(forDate)}`;
     const companyContacts = await getCustomersCompanyContacts(customersId);
+
     const repportTitle = `<p>
       Voici le rapport de sauvegarde pour le dossier ${
         customer.customer_name
-      } pour la date  - ${formatDateFr(forDate)}
+      } pour la date - ${formatDateFr(forDate)}
     </p>`;
+
     // Génération de la signature avec les emails
     let contactsEmails = companyContacts
       .map((contact) => contact.mail)
@@ -277,22 +291,57 @@ const dailyCustomersCombinedRepport = async (forDate , customersId) => {
       <p>L'équipe de surveillance FTP</p>
     `;
 
-     const repportHtml = generateCombinedReportContentHtml(
-       missingFiles,
-       receivedFiles
-     );
+    const repportHtml = generateCombinedReportContentHtml(
+      missingFiles,
+      receivedFiles
+    );
 
-      await reporting(to, subject, repportTitle, repportHtml, signature);
+    await reporting(to, subject, repportTitle, repportHtml, signature);
+  } catch (error) {
+    console.error(
+      `❌ Erreur lors du rapport pour ${customersId} :`,
+      error.message
+    );
+    // Continue l'exécution même si une erreur survient
   }
-  catch (error) {
-    throw error;
+};
+
+
+/**
+ * Fonction pour envoyer les notifications à tous les clients à notifier.
+ * @param {string} forDate - Date du rapport (format YYYY-MM-DD).
+ */
+const notifyAllCustomers = async (forDate) => {
+  try {
+    console.log(`📢 Début de l'envoi des rapports pour la date : ${formatDateFr(forDate)}`);
+
+    // Récupérer tous les clients qui doivent être notifiés
+    const customers = await getCustomersToNotify();
+
+    if (!customers || customers.length === 0) {
+      console.log("✅ Aucun client à notifier aujourd'hui.");
+      return;
+    }
+
+    console.log(`📩 ${customers.length} clients à notifier.`);
+
+    // Traiter chaque client un par un
+    for (const customer of customers) {
+      await dailyCustomersCombinedRepport(forDate, customer.id);
+    }
+
+    console.log("✅ Tous les rapports ont été envoyés avec succès.");
+  } catch (error) {
+    console.error("❌ Erreur lors de l'envoi des notifications :", error.message);
   }
-}
+};
+
+
 
 (async () => {
   try {
     console.log("Testing getMissingFiles...");
-    const testFiles = await dailyCustomersCombinedRepport("2024-02-26" ,  4); // Remplace par une date valide
+    const testFiles = await notifyAllCustomers("2024-02-26"); // Remplace par une date valide
     console.log("Test result:", testFiles);
   } catch (error) {
     console.error("Error in getMissingFiles:", error);

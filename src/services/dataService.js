@@ -287,6 +287,15 @@ async function getCustomersCompanyContacts(customer_id) {
 
 
 
+async function getCustomersToNotify() {
+  const query = `
+    SELECT * FROM customers WHERE notify is true 
+  `
+   const result = await db.executeQuery(query, []);
+   return result;
+}
+
+
 
 module.exports = {
   fetchFileConfig,
@@ -304,4 +313,5 @@ module.exports = {
   getCustomerById,
   getCustomersCompanyContacts,
   getMissingExpectedFilesByCustomer,
+  getCustomersToNotify,
 };
