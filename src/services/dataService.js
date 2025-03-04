@@ -247,6 +247,11 @@ async function getReceviedExpectedFilesByCustomer(fordate , customer_id) {
         AND deleted_at IS NULL AND base_name IS NOT NULL AND size > 0
       ORDER BY base_name ASC  ;
     `;
+
+  console.log("🛠 Requête SQL avant exécution :");
+  console.log(query.replace("$1", `'${fordate}'`).replace("$2", customer_id));
+
+  
   const result = await db.executeQuery(query, [fordate , customer_id]);
   //console.log("ito => " + fordate + " => "+ result)
   return result;
@@ -266,7 +271,7 @@ async function getCustomerContacts(customer_id) {
 
 async function getCustomerById(customer_id) {
   const query = `
-    SELECT  customers.* , company.name FROM customers join company on customers.company_id = company.id WHERE customers.id = $1
+    SELECT  customers.* , company.name as company_name FROM customers join company on customers.company_id = company.id WHERE customers.id = $1
   `;
 
    const result = await db.executeQuery(query, [customer_id]);
@@ -295,7 +300,19 @@ async function getCustomersToNotify() {
    return result;
 }
 
+/*
 
+(async () => {
+  try {
+    console.log("Testing function ");
+    const testFiles = await getReceviedExpectedFilesByCustomer("2025-02-14" , 1); // Remplace par une date valide
+    console.log("Test result:", testFiles);
+  } catch (error) {
+    console.error("Error in getMissingFiles:", error);
+  }
+})();
+
+*/
 
 module.exports = {
   fetchFileConfig,

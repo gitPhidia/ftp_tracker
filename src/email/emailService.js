@@ -288,7 +288,7 @@ const dailyCustomersCombinedRepport = async (forDate, customersId) => {
     const signature = `
       <p>Cordialement,</p>
       <p>Merci de ne pas répondre, pour plus d'informations merci de contacter : <strong>${contactsEmails}</strong></p>
-      <p>L'équipe de surveillance FTP</p>
+      <p>L'équipe  ${ customer.company_name }</p>
     `;
 
     const repportHtml = generateCombinedReportContentHtml(
@@ -336,18 +336,19 @@ const notifyAllCustomers = async (forDate) => {
   }
 };
 
-
+/*
 
 (async () => {
   try {
     console.log("Testing getMissingFiles...");
-    const testFiles = await notifyAllCustomers("2024-02-26"); // Remplace par une date valide
+    const testFiles = await notifyAllCustomers("2025-03-01"); // Remplace par une date valide
     console.log("Test result:", testFiles);
   } catch (error) {
     console.error("Error in getMissingFiles:", error);
   }
 })();
 
+*/
 
 
 module.exports = { sendMissingFilesReport, sendCombinedFilesReport , sendDailyCombinedRepport };

@@ -189,7 +189,7 @@ CREATE  TABLE "public".company (
 
 
 CREATE  TABLE "public".company_contacts ( 
-	id                   integer DEFAULT nextval('copmany_contacts_id_seq'::regclass) NOT NULL  ,
+	id                   SERIAL ,
 	mail                 varchar(50)  NOT NULL  ,
 	company_id           integer  NOT NULL  ,
 	CONSTRAINT pk_copmany_contacts PRIMARY KEY ( id )
@@ -197,6 +197,8 @@ CREATE  TABLE "public".company_contacts (
 
 
 ALTER TABLE expected_basenames ADD COLUMN "customer_id" INTEGER;
+ALTER TABLE customers ADD COLUMN "company_id" INTEGER;
+ALTER TABLE customers ADD COLUMN "notify" BOOLEAN default false;
 
 
 ALTER TABLE "public".company_contacts ADD CONSTRAINT fk_copmany_contacts_company FOREIGN KEY ( company_id ) REFERENCES "public".company( id );
@@ -205,6 +207,8 @@ ALTER TABLE "public".company_contacts ADD CONSTRAINT fk_copmany_contacts_company
 ALTER TABLE "public".expected_basenames ADD CONSTRAINT fk_expected_basenames FOREIGN KEY ( customer_id ) REFERENCES "public".customers( id );
 
 ALTER TABLE "public".files ADD CONSTRAINT fk_files_platforms FOREIGN KEY ( platform_id ) REFERENCES "public".platforms( id );
+
+ALTER TABLE "public".customers ADD CONSTRAINT fk_customers FOREIGN KEY ( company_id ) REFERENCES "public".company( id );
 
 
 CREATE OR REPLACE VIEW v_active_file_with_basename AS SELECT v_active_file_with_basename,
@@ -255,3 +259,51 @@ INSERT INTO "public".company_contacts( id, mail, company_id ) VALUES ( 4, 'tahin
 INSERT INTO "public".customer_contacts( id, mail, customer_id ) VALUES ( 1, 'loicRavelo05@gmail.com', 1);
 INSERT INTO "public".customer_contacts( id, mail, customer_id ) VALUES ( 2, 'fanamby@mgbi.mg', 1);
 
+
+CREATE OR REPLACE VIEW v_files AS SELECT 
+    files.name,
+    files.size,
+    files.modified_at,
+    files.extension,
+    files.base_name,
+    files.platform_id,
+    files.platform_name,
+    files.match_any_regex,
+    files.inserted_at,
+    files.updated_at,
+    files.deleted_at,
+    expected_basenames.customer_id,
+    customers.customer_name,
+    company.id AS company_id,
+    company.name AS company_name
+   FROM (((files
+     LEFT JOIN expected_basenames ON ((files.base_name = (expected_basenames.basename)::text)))
+     LEFT JOIN customers ON ((expected_basenames.customer_id = customers.id)))
+     LEFT JOIN company ON ((customers.company_id = company.id)));
+
+
+
+
+
+
+
+
+
+
+
+     UPDATE "public".expected_basenames SET customers_id = 10  where   id = 15 ;
+
+
+SELECT expected_basenames.basename , avg(v_files.size) as my_size from expected_basenames left join v_files on expected_basenames.basename = v_files.base_name group by expected_basenames.basename
+
+
+ SELECT 
+        base_name, 
+        name,
+        COALESCE(size , 0) as size ,
+        platform_name ,
+        inserted_at  , customer_id , deleted_at
+      FROM v_files
+      WHERE DATE(inserted_at) = '2025-03-05' AND customer_id = 1
+      
+      ORDER BY base_name ASC  ;
