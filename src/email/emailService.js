@@ -351,4 +351,4 @@ const notifyAllCustomers = async (forDate) => {
 */
 
 
-module.exports = { sendMissingFilesReport, sendCombinedFilesReport , sendDailyCombinedRepport };
+module.exports = { sendMissingFilesReport, sendCombinedFilesReport , sendDailyCombinedRepport  , notifyAllCustomers};
