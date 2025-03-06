@@ -121,4 +121,4 @@ cron.schedule('0 9 * * *', async () => {
 
 
 // Exécuter l'application principale
-//handleReport();
+handleReport();
