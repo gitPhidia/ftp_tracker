@@ -41,10 +41,10 @@ const reporting = async ( to , subject , repportTitle , repport , signature) => 
 
 const sendDailyCombinedRepport = async (forDate) => {
 
-     const subject = `Rapport combiné - ${formatDateFr(forDate)}`;
+     const subject = `Rapport  de sauvgarde pour la date du  - ${formatDateFr(forDate)}`;
      const to = "loic@mgbi.mg";
      const repportTitle = ` 
-         <p> Voici le rapport de sauvegarde daté du  <strong>${formatDateFr(
+         <p> Voici le rapport des fichiers de sauvegarde daté du  <strong>${formatDateFr(
            forDate
          )}</strong>.</p>
       
@@ -104,7 +104,7 @@ const dailyCustomersCombinedRepport = async (forDate, customersId) => {
       forDate,
       customersId
     );
-    const subject = `Rapport combiné de sauvegarde - ${formatDateFr(forDate)}`;
+    const subject = `Rapport  de sauvegarde - ${formatDateFr(forDate)}`;
     const companyContacts = await getCustomersCompanyContacts(customersId);
 
     /*
@@ -114,7 +114,7 @@ const dailyCustomersCombinedRepport = async (forDate, customersId) => {
     */
 
     const repportTitle = `<p>
-      Voici le rapport de sauvegarde pour  ${
+      Voici le rapport des fichiers de sauvegarde pour  ${
         customer.customer_name
       } , daté du  ${formatDateFr(forDate)}
     </p>`;
